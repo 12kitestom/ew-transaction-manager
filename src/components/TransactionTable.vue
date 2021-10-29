@@ -45,16 +45,22 @@ export default {
   mounted() {
     $("#table").DataTable({
       serverSide: true,
+      order: [[2, "desc"]],
       ajax: async (data, callback, settings) => {//eslint-disable-line
+        console.log(settings)
+        console.log(data)
 
         let options = {
           page: data.start / data.length,
           size: data.length,
+          sort: data.order[0].column,
+          sortdir: data.order[0].dir,
+          q: data.search.value
         }
         
 
         let getData = await window.ew.ajax.getRequest(`${urlBase}/user/${this.userGuid}/transactions`, options)
-        console.log(getData.data)
+        console.log('getData: ', getData.data)
 
         //dataTables expects returned JSON to have these parameters set: data, recordsTotal and recordsFiltered
         getData.data.recordsTotal = getData.data.totalRecords;
@@ -63,21 +69,22 @@ export default {
         callback(getData.data)
       },
       columns: [
-        { data: "txRef" },
-        { data: "userText" },
+        { data: "txRef", orderable: false },
+        { data: "userText", orderable: false },
         { data: null,
           render: data => {
             let date = data.recordedDate.split('T')
             return date[0]
           }
         },
-        { data: "txStatus" },
+        { data: "txStatus", orderable: false },
         { data: null,
+          orderable: false,
           render: data => {
             return data.amountPos - data.amountNeg;
           },
         },
-        { data: "balance" }
+        { data: "balance", orderable: false }
       ]
     })
   },
