@@ -4,7 +4,13 @@
       <div class="col-sm-12 col-md-9">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title mb-4">Manual adjustement</h5>
+            <h5 class="card-title mb-5">
+              Add Manual transaction
+              <button @click="closeInputs" class="btn  text-danger float-end" title="Close" >
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </h5>
+
             <div v-if="pointsValidationMsg || txNameValidationMsg" class="alert alert-danger" role="alert">
               <ul>
                 <li v-if="pointsValidationMsg">{{pointsValidationMsg}}</li>
@@ -20,18 +26,28 @@
                   type="number"
                   class="form-control"
                   id="points"
-                  placeholder="Adjusted points"
+                  placeholder="Amount of points"
                 />
               </div>
 
-              <div class="col-sm-12 col-md-8 mb-3">
-                <label for="tx-name" class="form-label">Transaction name</label>
+              <div class="col-sm-12 col-md-4 mb-3">
+                <label for="date" class="form-label">Transaction date</label>
+                <input
+                  v-model="txDate"
+                  type="date"
+                  class="form-control"
+                  id="date"
+                />
+              </div>
+
+              <div class="col-sm-12 mb-3">
+                <label for="tx-name" class="form-label">Transaction text</label>
                 <input
                   v-model="txName"
                   type="text"
                   class="form-control"
                   id="tx-name"
-                  placeholder="Transaction name shown to user"
+                  placeholder="Transaction text shown to the user"
                 />
               </div>
             </div>
@@ -61,7 +77,7 @@
     <div v-if="!showInputs" class="row my-5">
       <div class="col">
         <button @click="handleClick" class="btn btn-primary btn">
-          Adjust balance
+          Add transaction
         </button>
       </div>
     </div>
@@ -79,7 +95,9 @@ export default {
       pointsValidationMsg: '',
       txName: '',
       txNameValidationMsg: '',
-      txDesc: ''
+      txDesc: '',
+      txDate: '',
+      testPoints: -105
     };
   },
   methods: {
@@ -109,21 +127,50 @@ export default {
 
       return isValid
     },
+    formatPoints: function(points) {
+      points = Math.floor(parseInt(points))
+
+      let amountPos = 0
+      let amountNeg = 0
+
+      if(points > 0) {
+        amountPos = points
+      }
+      if(points < 0) {
+        amountNeg = Math.abs(points)
+      }
+
+      return { amountPos, amountNeg }
+    },
+    closeInputs: function() {
+        this.showInputs = false
+        this.points = ''
+        this.txName = ''
+        this.txDesc = ''
+        this.txDate = ''
+    },
     handleSubmit: function () {
 
+      let userText = this.txName
+      let adminDescription = this.txDesc
+      let amount = this.points
+      let eventDate = this.txDate
+      //let formatedPoints = this.formatPoints(this.points)
       let isValid = this.validateInputs()
-      let points = this.points
-      let txName = this.txName
-      let txDesc = this.txDesc
-
 
       //send
-      let payload = { points, txName, txDesc }
-      console.log(isValid)
+      let payload = { amount, userText, adminDescription, eventDate }
 
-      if(isValid && window.confirm('Are you sure?')) {
-        this.showInputs = !this.showInputs
-        this.$emit("adjust", payload);
+
+      if(isValid && window.confirm(
+        `
+        Are you sure you want to add this transaction?
+        Amount: ${amount}
+        Name: ${userText}
+        `
+      )) {
+        this.$emit("add-transaction", payload);
+        this.closeInputs()
       }
 
     },
@@ -131,7 +178,8 @@ export default {
   computed: {
     fadeClass: function() {
       return this.showInputs ? 'fade-in' : 'fade-out'
-    }
+    },
+
   }
 };
 </script>

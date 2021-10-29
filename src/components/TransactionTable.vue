@@ -5,7 +5,7 @@
         <table v-once id="table" class="table table-striped">
           <thead>
             <tr>
-              <th>Redemption Ref.</th>
+              <th>Transaction Ref.</th>
               <th>Description</th>
               <th>Date</th>
               <th>Status</th>
@@ -57,7 +57,8 @@ export default {
           sortdir: data.order[0].dir,
           q: data.search.value
         }
-        
+
+
 
         let getData = await window.ew.ajax.getRequest(`${urlBase}/user/${this.userGuid}/transactions`, options)
         console.log('getData: ', getData.data)

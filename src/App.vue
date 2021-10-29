@@ -2,8 +2,8 @@
   <div id="app" class="container">
     <div v-if="!isLoading">
       <UserSummary :balanceData="balanceData" />
-      <PointsAdjustment @adjust="adjustBalance"/>
-      <TransactionTable :userGuid="sampleUser"/>
+      <PointsAdjustment @add-transaction="postTransaction"/>
+      <TransactionTable :userGuid="sampleUser" :key="counter"/>
     </div>
     <div v-else>
       <div v-if="isLoading" class="col-12">
@@ -43,7 +43,8 @@ export default {
       sampleUser: 'lstTYg9nEApvgh7e',
       isLoading: true,
       balanceData: {},
-      statementData: {}
+      statementData: {},
+      counter: 0
     }
   },
   async created() {
@@ -64,17 +65,29 @@ export default {
       }
     },
     loadUserStatement: async function() {
+      //this is here temporarily, simply so I can see all the data that table receives
       let userGuid = this.sampleUser
       const res = await window.ew.ajax.getRequest(`${urlBase}/user/${userGuid}/transactions`);
 
       if (res.success) {
         this.statementData = res.data
       } else {
-        alert("Error fetching statement data. Please try again.");
+        alert("Error fetching statement data");
       }
     },
-    adjustBalance: function(payload) {
+    postTransaction: async function(payload) {
+      //let userGuid = this.sampleUser
+      payload.userGuid = this.sampleUser
       console.log(payload)
+
+      // const res = await window.ew.ajax.postRequest(`${urlBase}/admin/transactions`, payload);
+
+      // if (res.success) {
+      //   this.loadUserBalance()
+      //   this.counter += 1
+      // } else {
+      //   alert("Error when adding new transaction. Please try again.");
+      // }
     }
   }
 
