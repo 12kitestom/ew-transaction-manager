@@ -4,7 +4,7 @@
       <h2>{{balanceData.userGuid}}</h2>
     </div>
     <div class="row gx-2 gy-2 mt-1 mb-3">
-      <p class="text-muted my-2 balance_date">Last updated on {{balanceData.balanceDate}}</p>
+      <p class="text-muted my-2 balance_date">Last updated on {{formatedDate}}</p>
       <div class="col-md-3 col-sm-12">
         <div class="card">
           <div class="card-body">
@@ -42,6 +42,10 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+const advancedFormat = require('dayjs/plugin/advancedFormat')
+dayjs.extend(advancedFormat)
+
 export default {
   name: "UserSummary",
   props: {
@@ -50,7 +54,14 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+
+  },
+  computed: {
+    formatedDate: function() {
+      return dayjs(this.balanceData.balanceDate).format('dddd, MMMM Do, YYYY')
+    } 
+  }
 };
 </script>
 
