@@ -80,14 +80,14 @@ export default {
       payload.userGuid = this.sampleUser
       console.log(payload)
 
-      // const res = await window.ew.ajax.postRequest(`${urlBase}/admin/transactions`, payload);
+      const res = await window.ew.ajax.postRequest(`${urlBase}/admin/transactions`, payload);
 
-      // if (res.success) {
-      //   this.loadUserBalance()
-      //   this.counter += 1
-      // } else {
-      //   alert("Error when adding new transaction. Please try again.");
-      // }
+      if (res.success) {
+        this.loadUserBalance()
+        this.counter += 1
+      } else {
+        alert("Error when adding new transaction. Please try again.");
+      }
     }
   }
 

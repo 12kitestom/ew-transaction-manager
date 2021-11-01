@@ -8,9 +8,9 @@
               <th>Transaction Ref.</th>
               <th>Description</th>
               <th>Date</th>
-              <th>Status</th>
-              <th>Amount</th>
               <th>Balance</th>
+              <th>Amount</th>
+              <th>Action</th>
             </tr>
           </thead>
         </table>
@@ -44,11 +44,10 @@ export default {
   },
   mounted() {
     $("#table").DataTable({
+      searchDelay: 1000,
       serverSide: true,
       order: [[2, "desc"]],
       ajax: async (data, callback, settings) => {//eslint-disable-line
-        console.log(settings)
-        console.log(data)
 
         let options = {
           page: data.start / data.length,
@@ -61,13 +60,17 @@ export default {
 
 
         let getData = await window.ew.ajax.getRequest(`${urlBase}/user/${this.userGuid}/transactions`, options)
-        console.log('getData: ', getData.data)
 
         //dataTables expects returned JSON to have these parameters set: data, recordsTotal and recordsFiltered
         getData.data.recordsTotal = getData.data.totalRecords;
         getData.data.recordsFiltered = getData.data.totalRecords
         
         callback(getData.data)
+      },
+      createdRow: function(row, data) {
+        if(data.txStatus === 0) {
+          $(row).addClass('new-transaction')
+        }
       },
       columns: [
         { data: "txRef", orderable: false },
@@ -78,22 +81,78 @@ export default {
             return date[0]
           }
         },
-        { data: "txStatus", orderable: false },
         { data: null,
           orderable: false,
           render: data => {
             return data.amountPos - data.amountNeg;
           },
         },
-        { data: "balance", orderable: false }
+        { data: "balance", orderable: false },
+        { data: null,
+          render: data => {
+            if(data.txStatus === 0) {
+              return `
+              <button class="btn btn-success btn-sm" data-type="approve" data-ref="${data.txRef}" >Approve</button>
+              <button class="btn btn-danger btn-sm" data-type="reject" data-ref="${data.txRef}">Reject</button>
+              `
+            } else {
+              return ''
+            }
+          }
+        },
       ]
     })
-  },
-  methods: {
 
-  }
+    this.$nextTick(function() {
+      console.log('view rendered')
+
+      $('#table').on('draw.dt', function() {
+        console.log('table draw')
+        $('#table .btn').click(handlePending);
+        // $('#vue-table .form-select').change(selectHandler);
+      })
+
+    })
+  },
+  methods: {}
 };
+
+async function handlePending() {
+  let $btn = $(this);
+
+  let type = $btn.data('type');
+  let txRef = $btn.data('ref');
+  console.log({txRef})
+
+  let res = ''
+
+  if(window.confirm(`Are you sure you want to ${type} this transaction?`)) {
+
+    if(type === 'approve') {
+      res = await window.ew.ajax.postRequest(`${urlBase}/admin/action/approve-transaction`, { txRef })
+    }
+  
+    if(type === 'reject') {
+      res = await window.ew.ajax.postRequest(`${urlBase}/admin/action/delete-transaction`, { txRef })
+    }
+  
+  }
+
+
+  console.log(res)
+
+  if(res.success) {
+    //reload stuff
+    console.log('success, reloading table...')
+    $('#table').DataTable().ajax.reload()
+  } else {
+    console.log('no')
+  }
+}
 </script>
 
 <style>
+.new-transaction {
+  background-color: #e5fde5 !important;
+}
 </style>
