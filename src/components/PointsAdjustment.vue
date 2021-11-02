@@ -153,6 +153,8 @@ export default {
     closeInputs: function() {
         this.$emit('clear-errors')
         this.showInputs = false
+        this.txNameValidationMsg = ''
+        this.pointsValidationMsg = ''
         this.points = ''
         this.txName = ''
         this.txDesc = ''
