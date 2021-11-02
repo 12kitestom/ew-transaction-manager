@@ -1,12 +1,13 @@
 <template>
   <div id="app" class="container">
+    <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
     <div v-if="!isLoading">
       <UserSummary :balanceData="balanceData" />
-      <PointsAdjustment @add-transaction="postTransaction"/>
+      <PointsAdjustment @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
       <TransactionTable :userGuid="sampleUser" :key="counter"/>
     </div>
     <div v-else>
-      <div v-if="isLoading" class="col-12">
+      <div class="col-12">
         <div class="my-5">
           <div class="d-flex justify-content-center py-5">
             <div class="spinner-border text-secondary" role="status">
@@ -44,7 +45,9 @@ export default {
       isLoading: true,
       balanceData: {},
       statementData: {},
-      counter: 0
+      counter: 0,
+      errorMessage: '',
+      successMessage: ''
     }
   },
   async created() {
@@ -76,21 +79,41 @@ export default {
       }
     },
     postTransaction: async function(payload) {
-      //let userGuid = this.sampleUser
       payload.userGuid = this.sampleUser
       console.log(payload)
 
       const res = await window.ew.ajax.postRequest(`${urlBase}/admin/transactions`, payload);
-
+      console.log(res)
       if (res.success) {
-        this.loadUserBalance()
-        this.counter += 1
+        if(res.data.success) {
+          this.loadUserBalance()
+          this.message = ''
+          this.counter += 1
+
+          if(res.data.message) {
+            this.successMessage = this.message
+            setTimeout(() => {
+              this.successMessage = ''
+            }, 3000);
+          }
+        }
+
+        if(res.data.message) {
+          this.errorMessage = res.data.message
+          //this.successMessage = res.data.message
+        }
       } else {
         alert("Error when adding new transaction. Please try again.");
       }
+    },
+    clearErrors: function() {
+      this.errorMessage = ''
+    },
+    dismissMessage: function() {
+      console.log('click')
+      this.successMessage = ''
     }
   }
-
 }
 </script>
 
@@ -116,5 +139,11 @@ td {
 .fade-in {
   opacity: 1;
   transition: all 0.5s;
+}
+
+.message-container {
+  cursor: pointer;
+  position: absolute;
+  right: 5%;
 }
 </style>

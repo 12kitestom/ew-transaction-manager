@@ -11,10 +11,11 @@
               </button>
             </h5>
 
-            <div v-if="pointsValidationMsg || txNameValidationMsg" class="alert alert-danger" role="alert">
+            <div v-if="pointsValidationMsg || txNameValidationMsg || message" class="alert alert-danger" role="alert">
               <ul>
                 <li v-if="pointsValidationMsg">{{pointsValidationMsg}}</li>
                 <li v-if="txNameValidationMsg">{{txNameValidationMsg}}</li>
+                <li v-if="message">{{message}}</li>
               </ul>
             </div>
 
@@ -74,7 +75,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!showInputs" class="row my-5">
+    <div v-if="!showInputs" class="row mt-4 mb-5">
       <div class="col">
         <button @click="handleClick" class="btn btn-primary btn">
           Add transaction
@@ -87,7 +88,14 @@
 <script>
 export default {
   name: "PointsAdjustement",
-  props: {},
+  props: {
+    message: {
+      type: String
+    },
+    update: {
+      type: Number
+    }
+  },
   data() {
     return {
       showInputs: false,
@@ -111,7 +119,7 @@ export default {
       let txName = this.txName
       let isValid = true
 
-      if(points.length < 1) {
+      if(points.length < 1 || points == 0) {
         this.pointsValidationMsg = 'Please enter amount of points to be adjusted'
         isValid = false
       } else {
@@ -143,6 +151,7 @@ export default {
       return { amountPos, amountNeg }
     },
     closeInputs: function() {
+        this.$emit('clear-errors')
         this.showInputs = false
         this.points = ''
         this.txName = ''
@@ -170,7 +179,7 @@ export default {
         `
       )) {
         this.$emit("add-transaction", payload);
-        this.closeInputs()
+        
       }
 
     },
@@ -180,6 +189,11 @@ export default {
       return this.showInputs ? 'fade-in' : 'fade-out'
     },
 
+  },
+  watch: {
+    update: function() {
+      this.closeInputs()
+    }
   }
 };
 </script>
