@@ -109,7 +109,6 @@ export default {
       $('#table').on('draw.dt', function() {
         console.log('table draw')
         $('#table .btn').click(handlePending);
-        // $('#vue-table .form-select').change(selectHandler);
       })
 
     })
@@ -118,37 +117,45 @@ export default {
 };
 
 async function handlePending() {
-  let $btn = $(this);
+      let $btn = $(this);
+      console.log('click')
 
-  let type = $btn.data('type');
-  let txRef = $btn.data('ref');
-  console.log({txRef})
+      let type = $btn.data('type');
+      let txRef = $btn.data('ref');
+      console.log({txRef})
 
-  let res = ''
+      let res = ''
 
-  if(window.confirm(`Are you sure you want to ${type} this transaction?`)) {
+      if(window.confirm(`Are you sure you want to ${type} this transaction?`)) {
 
-    if(type === 'approve') {
-      res = await window.ew.ajax.postRequest(`${urlBase}/admin/action/approve-transaction`, { txRef })
+        if(type === 'approve') {
+          res = await window.ew.ajax.postRequest(`${urlBase}/admin/action/approve-transaction`, { txRef })
+        }
+      
+        if(type === 'reject') {
+          res = await window.ew.ajax.postRequest(`${urlBase}/admin/action/delete-transaction`, { txRef })
+
+        }
+      }
+
+      console.log(res)
+
+      if(res.success) {
+        //reload stuff
+        
+        if (window.transactionManager) {
+          //refresh user balance
+          window.transactionManager.$children[0].loadUserBalance();
+        }
+
+        console.log('success, reloading table...')
+        $('#table').DataTable().ajax.reload()
+      } else {
+
+        console.log('no')
+      }
     }
-  
-    if(type === 'reject') {
-      res = await window.ew.ajax.postRequest(`${urlBase}/admin/action/delete-transaction`, { txRef })
-    }
-  
-  }
 
-
-  console.log(res)
-
-  if(res.success) {
-    //reload stuff
-    console.log('success, reloading table...')
-    $('#table').DataTable().ajax.reload()
-  } else {
-    console.log('no')
-  }
-}
 </script>
 
 <style>
