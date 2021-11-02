@@ -4,7 +4,7 @@
       <h2>{{balanceData.userGuid}}</h2>
     </div>
     <div class="row gx-2 gy-2 mt-1 mb-3">
-      <p class="text-muted my-2 balance_date">Last updated on {{formatedDate}}</p>
+      
       <div class="col-md-3 col-sm-12">
         <div class="card">
           <div class="card-body">
@@ -37,6 +37,7 @@
           </div>
         </div>
       </div> -->
+      <p class="text-muted my-2 balance_date">Last updated on {{formatedDate}}</p>
     </div>
   </div>
 </template>

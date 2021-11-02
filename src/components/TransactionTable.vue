@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row">
+    <div class="row mb-3">
       <div class="col">
         <table v-once id="table" class="table table-striped">
           <thead>
@@ -104,7 +104,6 @@ export default {
     })
 
     this.$nextTick(function() {
-      console.log('view rendered')
 
       $('#table').on('draw.dt', function() {
         console.log('table draw')
@@ -118,12 +117,8 @@ export default {
 
 async function handlePending() {
       let $btn = $(this);
-      console.log('click')
-
       let type = $btn.data('type');
       let txRef = $btn.data('ref');
-      console.log({txRef})
-
       let res = ''
 
       if(window.confirm(`Are you sure you want to ${type} this transaction?`)) {
@@ -141,18 +136,15 @@ async function handlePending() {
       console.log(res)
 
       if(res.success) {
-        //reload stuff
-        
         if (window.transactionManager) {
           //refresh user balance
           window.transactionManager.$children[0].loadUserBalance();
         }
 
-        console.log('success, reloading table...')
         $('#table').DataTable().ajax.reload()
       } else {
 
-        console.log('no')
+        alert(`Error occured when attepmting to ${type} transaction. Please try again.`)
       }
     }
 
