@@ -1,10 +1,11 @@
 <template>
-  <div id="app" class="container">
+<div class="container">
+  <div v-if="userGuid" id="app">
     <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
     <div v-if="!isLoading">
       <UserSummary :balanceData="balanceData" />
       <AddTransaction @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
-      <TransactionTable :userGuid="sampleUser" :key="counter"/>
+      <TransactionTable :userGuid="userGuid" :key="counter"/>
     </div>
     <div v-else>
       <div class="col-12">
@@ -17,6 +18,10 @@
         </div>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <p class="text-center my-5">Error occured when retriving user id. Please try again.</p>
+  </div>
   </div>
 </template>
 
@@ -39,9 +44,9 @@ if (process.env.VUE_APP_API_MODE == "dev") {
 export default {
   name: 'App',
   components:  {UserSummary, TransactionTable, AddTransaction },
+  props: ['userGuid'],
   data() {
     return {
-      sampleUser: 'lstTYg9nEApvgh7e',
       isLoading: true,
       balanceData: {},
       statementData: {},
@@ -58,7 +63,7 @@ export default {
   },
   methods: {
     loadUserBalance: async function() {
-      let userGuid = this.sampleUser
+      let userGuid = this.userGuid
       const res = await window.ew.ajax.getRequest(`${urlBase}/user/${userGuid}/balance`);
 
       if (res.success) {
@@ -69,7 +74,7 @@ export default {
     },
     loadUserStatement: async function() {
       //this is here temporarily, simply so I can see all the data that table receives
-      let userGuid = this.sampleUser
+      let userGuid = this.userGuid
       const res = await window.ew.ajax.getRequest(`${urlBase}/user/${userGuid}/transactions`);
 
       if (res.success) {
@@ -79,7 +84,7 @@ export default {
       }
     },
     postTransaction: async function(payload) {
-      payload.userGuid = this.sampleUser
+      payload.userGuid = this.userGuid
       console.log(payload)
 
       const res = await window.ew.ajax.postRequest(`${urlBase}/admin/transactions`, payload);
