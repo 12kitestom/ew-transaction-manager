@@ -43,7 +43,7 @@ if (process.env.VUE_APP_API_MODE == "dev") {
 
 export default {
   name: 'App',
-  components:  {UserSummary, TransactionTable, AddTransaction },
+  components:  { UserSummary, TransactionTable, AddTransaction },
   props: ['userGuid'],
   data() {
     return {

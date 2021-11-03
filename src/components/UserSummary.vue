@@ -1,10 +1,12 @@
 <template>
   <div>
-    <div class="row mt-3">
-      <h2>{{balanceData.userGuid}}</h2>
+    <div class="row mt-3 mb-5">
+      <h1 class="user-name">User transactions – {{balanceData.displayName}}</h1>
+      <span class="text-muted fs-5">{{balanceData.userEmail}}</span>
     </div>
-    <div class="row gx-2 gy-2 mt-1 mb-3">
-      
+    <p class="text-muted my-2 balance_date">Last updated on {{formatedDate}}</p>
+    <div class="row row-flex gx-2 mt-1 mb-3">
+
       <div class="col-md-3 col-sm-12">
         <div class="card">
           <div class="card-body">
@@ -37,8 +39,8 @@
           </div>
         </div>
       </div> -->
-      <p class="text-muted my-2 balance_date">Last updated on {{formatedDate}}</p>
     </div>
+    
   </div>
 </template>
 
@@ -61,13 +63,17 @@ export default {
   computed: {
     formatedDate: function() {
       return dayjs(this.balanceData.balanceDate).format('dddd, MMMM Do, YYYY')
-    } 
+    }
   }
 };
 </script>
 
-<style>
+<style scoped>
 .balance_date {
   font-size: 0.8rem;
+}
+
+.user-name {
+  margin-bottom: 0;
 }
 </style>
