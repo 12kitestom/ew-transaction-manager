@@ -129,22 +129,24 @@ async function handlePending() {
       
         if(type === 'reject') {
           res = await window.ew.ajax.postRequest(`${urlBase}/admin/action/delete-transaction`, { txRef })
-
-        }
-      }
-
-      console.log(res)
-
-      if(res.success) {
-        if (window.transactionManager) {
-          //refresh user balance
-          window.transactionManager.$children[0].loadUserBalance();
         }
 
-        $('#table').DataTable().ajax.reload()
-      } else {
+        console.log(res)
 
-        alert(`Error occured when attepmting to ${type} transaction. Please try again.`)
+        if(res.success) {
+          if (window.transactionManager.$children) {
+            //refresh user balance
+            window.transactionManager.$children[0].loadUserBalance();
+          } else {
+            //in preparation for vue3 where $children property is removed
+            window.transactionManager.loadUserBalance()
+          }
+
+          $('#table').DataTable().ajax.reload()
+        } else {
+          alert(`Error occured when attepmting to ${type} transaction. Please try again.`)
+        }
+
       }
     }
 
