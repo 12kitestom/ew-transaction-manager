@@ -87,7 +87,7 @@
 
 <script>
 export default {
-  name: "PointsAdjustement",
+  name: "AddTransaction",
   props: {
     message: {
       type: String

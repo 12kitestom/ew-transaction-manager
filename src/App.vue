@@ -3,7 +3,7 @@
     <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
     <div v-if="!isLoading">
       <UserSummary :balanceData="balanceData" />
-      <PointsAdjustment @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
+      <AddTransaction @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
       <TransactionTable :userGuid="sampleUser" :key="counter"/>
     </div>
     <div v-else>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import PointsAdjustment from './components/PointsAdjustment.vue';
+import AddTransaction from './components/AddTransaction.vue';
 import TransactionTable from './components/TransactionTable.vue';
 import UserSummary from './components/UserSummary.vue';
 
@@ -38,7 +38,7 @@ if (process.env.VUE_APP_API_MODE == "dev") {
 
 export default {
   name: 'App',
-  components:  {UserSummary, TransactionTable, PointsAdjustment },
+  components:  {UserSummary, TransactionTable, AddTransaction },
   data() {
     return {
       sampleUser: 'lstTYg9nEApvgh7e',
