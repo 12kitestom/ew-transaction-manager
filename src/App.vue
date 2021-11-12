@@ -31,7 +31,11 @@ import TransactionTable from './components/TransactionTable.vue';
 import UserSummary from './components/UserSummary.vue';
 
 
-const urlBase = process.env.VUE_APP_TRANSACTION_MANAGER_API_BASE; //eslint-disable-line
+let urlBase = process.env.VUE_APP_TRANSACTION_MANAGER_API_BASE; //eslint-disable-line
+
+if (window.ewGetApiBase) {
+  urlBase = window.ewGetApiBase()
+}
 
 if (process.env.VUE_APP_API_MODE == "dev") {
   let token = process.env.VUE_APP_DEV_TOKEN;
