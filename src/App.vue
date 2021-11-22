@@ -1,6 +1,7 @@
 <template>
 <div class="container">
   <div v-if="userGuid" id="app">
+    <NavPanel :userGuid="userGuid"/>
     <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
     <div v-if="!isLoading">
       <UserSummary :balanceData="balanceData" />
@@ -27,6 +28,7 @@
 
 <script>
 import AddTransaction from './components/AddTransaction.vue';
+import NavPanel from './components/NavPanel.vue';
 import TransactionTable from './components/TransactionTable.vue';
 import UserSummary from './components/UserSummary.vue';
 
@@ -43,7 +45,7 @@ if (process.env.VUE_APP_API_MODE == "dev") {
 
 export default {
   name: 'App',
-  components:  { UserSummary, TransactionTable, AddTransaction },
+  components:  { UserSummary, TransactionTable, AddTransaction, NavPanel },
   props: ['userGuid'],
   data() {
     return {
