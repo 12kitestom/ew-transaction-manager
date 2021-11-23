@@ -1,5 +1,5 @@
 <template>
-  <div id="nav-panel">
+  <div id="nav-panel" class="mb-5">
     <div class="card" :class="shadow">
       <div class="card-body">
         <a :href="goBackUrl()" class="btn btn-primary"><i class="bi bi-arrow-left"></i>Back</a>

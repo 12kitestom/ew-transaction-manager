@@ -1,28 +1,30 @@
 <template>
-<div class="container">
-  <div v-if="userGuid" id="app">
+  <div>
     <NavPanel :userGuid="userGuid"/>
-    <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
-    <div v-if="!isLoading">
-      <UserSummary :balanceData="balanceData" />
-      <AddTransaction @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
-      <TransactionTable :userGuid="userGuid" :key="counter"/>
-    </div>
-    <div v-else>
-      <div class="col-12">
-        <div class="my-5">
-          <div class="d-flex justify-content-center py-5">
-            <div class="spinner-border text-secondary" role="status">
-              <span class="visually-hidden">Loading...</span>
+    <div class="container">
+      <div v-if="userGuid" id="app">
+        <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
+        <div v-if="!isLoading">
+          <UserSummary :balanceData="balanceData" />
+          <AddTransaction @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
+          <TransactionTable :userGuid="userGuid" :key="counter"/>
+        </div>
+        <div v-else>
+          <div class="col-12">
+            <div class="my-5">
+              <div class="d-flex justify-content-center py-5">
+                <div class="spinner-border text-secondary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div v-else>
+        <p class="text-center my-5">Error occured when retriving user id. Please try again.</p>
+      </div>
     </div>
-  </div>
-  <div v-else>
-    <p class="text-center my-5">Error occured when retriving user id. Please try again.</p>
-  </div>
   </div>
 </template>
 
