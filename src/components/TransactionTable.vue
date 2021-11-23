@@ -42,6 +42,11 @@ export default {
   data() {
     return {};
   },
+  created() {
+    if (window.ewGetApiBase) {
+      this.urlBase = window.ewGetApiBase()
+    }
+  },
   mounted() {
     $("#table").DataTable({
       searchDelay: 1000,
@@ -112,7 +117,6 @@ export default {
 
     })
   },
-  methods: {}
 };
 
 async function handlePending() {
