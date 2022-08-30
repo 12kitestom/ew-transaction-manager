@@ -129,9 +129,6 @@ export default {
 
       let isValid = true
 
-      console.log('today ',today)
-      console.log('txDate', txDate)
-
       if(points.length < 1 || points == 0) {
         this.pointsValidationMsg = 'Please enter amount of points to be adjusted'
         isValid = false
