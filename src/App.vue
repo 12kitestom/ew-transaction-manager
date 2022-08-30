@@ -130,6 +130,19 @@ export default {
 </script>
 
 <style>
+.container {
+  margin-left: 0;
+}
+
+.card-body {
+  box-shadow: 0 5px 10px -4px #666c;
+}
+
+#user-summary .card-body {
+    background-color: #f3faf3;
+    border-radius: 5px;
+}
+
 .point-adjustement-container input::placeholder,
 .point-adjustement-container textarea::placeholder {
   font-size: 0.9rem;
