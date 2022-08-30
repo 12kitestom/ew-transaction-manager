@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-if="showInputs" class="row mb-5 point-adjustement-container" :class="fadeClass">
-      <div class="col-sm-12 col-md-9">
+    <div v-if="showInputs" class="row mb-5 gx-2 point-adjustement-container" :class="fadeClass">
+      <div class="col-sm-12 col-md-8">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title mb-5">
@@ -15,6 +15,7 @@
               <ul>
                 <li v-if="pointsValidationMsg">{{pointsValidationMsg}}</li>
                 <li v-if="txNameValidationMsg">{{txNameValidationMsg}}</li>
+                <li v-if="txDateValidationMsg">{{txDateValidationMsg}}</li>
                 <li v-if="message">{{message}}</li>
               </ul>
             </div>
@@ -38,6 +39,7 @@
                   type="date"
                   class="form-control"
                   id="date"
+
                 />
               </div>
 
@@ -86,6 +88,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+
 export default {
   name: "AddTransaction",
   props: {
@@ -104,8 +108,10 @@ export default {
       txName: '',
       txNameValidationMsg: '',
       txDesc: '',
-      txDate: '',
-      testPoints: -105
+      //txDate: new Date().toISOString().split('T')[0],
+      txDate: dayjs().format('YYYY-MM-DD'),
+      txDateValidationMsg: '',
+      testPoints: -105,
     };
   },
   methods: {
@@ -117,7 +123,14 @@ export default {
     validateInputs: function() {
       let points = this.points
       let txName = this.txName
+      let txDate = this.txDate.split('-').join('')
+      let today = dayjs().format('YYYY-MM-DD')
+      today = today.split('-').join('')
+
       let isValid = true
+
+      console.log('today ',today)
+      console.log('txDate', txDate)
 
       if(points.length < 1 || points == 0) {
         this.pointsValidationMsg = 'Please enter amount of points to be adjusted'
@@ -131,6 +144,13 @@ export default {
         isValid = false
       } else {
         this.txNameValidationMsg = ''
+      } 
+
+      if(txDate > today ) {
+        this.txDateValidationMsg = 'Transaction date cannot be set in the future'
+        isValid = false
+      } else {
+        this.txDateValidationMsg = ''
       } 
 
       return isValid
@@ -155,10 +175,11 @@ export default {
         this.showInputs = false
         this.txNameValidationMsg = ''
         this.pointsValidationMsg = ''
+        this.txDateValidationMsg = ''
         this.points = ''
         this.txName = ''
         this.txDesc = ''
-        this.txDate = ''
+        this.txDate = dayjs().format('YYYY-MM-DD')
     },
     handleSubmit: function () {
 
