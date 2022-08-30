@@ -8,8 +8,8 @@
               <th>Transaction Ref.</th>
               <th>Description</th>
               <th>Date</th>
-              <th>Balance</th>
               <th>Amount</th>
+              <th>Balance</th>
               <th>Action</th>
             </tr>
           </thead>
