@@ -3,11 +3,7 @@ const urlSearchParams = new URLSearchParams(window.location.search);
 const params = Object.fromEntries(urlSearchParams.entries());
 const { u } = params;
 
-Vue.filter('capitalize', function (value) {
-    if (!value) return ''
-    value = value.toString()
-    return value.charAt(0).toUpperCase() + value.slice(1)
-  })
+
 
 jQuery('#tx-manager').html("<txmanager user-guid=\""+u+"\"></txmanager>")
 

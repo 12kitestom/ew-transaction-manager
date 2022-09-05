@@ -1,5 +1,5 @@
 {
-  "featureName": "transactionAdmin",
+  "featureName": "9217d15d-f385-4c43-b645-6ce4959a3c43",
   "version": "0.1.0",
   "resources": {
     "js": [
@@ -21,5 +21,6 @@
     "body": "/bodyfragment.html",
     "script": "/scriptfragment.html",
     "prescript": "/prescript.html"
-  }
+  },
+  "vueJsVersion": 3
 }

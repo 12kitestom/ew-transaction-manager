@@ -19,6 +19,7 @@
   },
   "contentPaths": {
     "body": "/bodyfragment.html",
-    "script": "/scriptfragment.html"
+    "script": "/scriptfragment.html",
+    "prescript": "/prescript.html"
   }
 }
