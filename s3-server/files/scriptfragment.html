@@ -4,11 +4,6 @@ const params = Object.fromEntries(urlSearchParams.entries());
 const { u } = params;
 
 
+const App = window.txmanager
 
-jQuery('#tx-manager').html("<txmanager user-guid=\""+u+"\"></txmanager>")
-
-new Vue({
-components: {
-  txmanager
-}
-}).$mount('#tx-manager')
+Vue.createApp(App, { userGuid: u } ).mount('#tx-manager')
