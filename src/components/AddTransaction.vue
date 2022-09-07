@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="showInputs" class="row mb-5 gx-2 point-adjustement-container" :class="fadeClass">
+    <div v-if="showInputs" class="row mb-5 gx-2 point-adjustment-container" :class="fadeClass">
       <div class="col-sm-12 col-md-8">
         <div class="card">
           <div class="card-body">

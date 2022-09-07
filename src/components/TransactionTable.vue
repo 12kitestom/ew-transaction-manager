@@ -22,7 +22,7 @@
 <script>
 /* global $:readonly */ //eslint-disable-line
 
-const urlBase = process.env.VUE_APP_TRANSACTION_MANAGER_API_BASE; //eslint-disable-line
+let urlBase = process.env.VUE_APP_TRANSACTION_MANAGER_API_BASE; //eslint-disable-line
 
 if (process.env.VUE_APP_API_MODE == "dev") {
   let token = process.env.VUE_APP_DEV_TOKEN;
@@ -30,6 +30,10 @@ if (process.env.VUE_APP_API_MODE == "dev") {
     //Can't enable dev mode without a token to use
     window.ew.dev.enableAjaxDev(token);
   }
+}
+
+if (window.ewGetApiBase) {
+  urlBase = window.ewGetApiBase()
 }
 
 export default {
@@ -97,8 +101,8 @@ export default {
           render: data => {
             if(data.txStatus === 0) {
               return `
-              <button class="btn btn-success btn-sm" data-type="approve" data-ref="${data.txRef}" >Approve</button>
-              <button class="btn btn-danger btn-sm" data-type="reject" data-ref="${data.txRef}">Reject</button>
+              <button class="btn btn-success btn-sm" data-type="approve" data-ref="${data.txRef}" data-guid="${this.userGuid}" >Approve</button>
+              <button class="btn btn-danger btn-sm" data-type="reject" data-ref="${data.txRef}" data-guid="${this.userGuid}">Reject</button>
               `
             } else {
               return ''
@@ -123,6 +127,7 @@ async function handlePending() {
       let $btn = $(this);
       let type = $btn.data('type');
       let txRef = $btn.data('ref');
+      let guid = $btn.data('guid');
       let res = ''
 
       if(window.confirm(`Are you sure you want to ${type} this transaction?`)) {
@@ -138,17 +143,27 @@ async function handlePending() {
         console.log(res)
 
         if(res.success) {
-          if (window.transactionManager.$children) {
+          let thisApp = ''
+
+          if(window.appName) {
+            thisApp = window.appName
+          } else {
+            console.error(`'appName' string has to be defined on the window object`)
+          }
+
+          console.log('thisApp:', thisApp)
+
+          if (window[thisApp].$children) {
             //refresh user balance
-            window.transactionManager.$children[0].loadUserBalance();
+            window[thisApp].$children[0].loadUserBalance(guid);
           } else {
             //in preparation for vue3 where $children property is removed
-            window.transactionManager.loadUserBalance()
+            window[thisApp].methods.loadUserBalance(guid)
           }
 
           $('#table').DataTable().ajax.reload()
         } else {
-          alert(`Error occured when attepmting to ${type} transaction. Please try again.`)
+          alert(`Error occurred when attempting to ${type} transaction. Please try again.`)
         }
 
       }

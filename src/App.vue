@@ -22,7 +22,7 @@
         </div>
       </div>
       <div v-else>
-        <p class="text-center my-5">Error occured when retriving user id. Please try again.</p>
+        <p class="text-center my-5">Error occurred when retrieving user id. Please try again.</p>
       </div>
     </div>
   </div>
@@ -71,8 +71,8 @@ export default {
     this.isLoading = false
   },
   methods: {
-    loadUserBalance: async function() {
-      let userGuid = this.userGuid
+    loadUserBalance: async function(guid) {
+      let userGuid = guid || this.userGuid
       const res = await window.ew.ajax.getRequest(`${urlBase}/user/${userGuid}/balance`);
 
       if (res.success) {
@@ -140,8 +140,8 @@ export default {
   box-shadow: 0 4px 3px -4px #666c;
 }
 
-.point-adjustement-container input::placeholder,
-.point-adjustement-container textarea::placeholder {
+.point-adjustment-container input::placeholder,
+.point-adjustment-container textarea::placeholder {
   font-size: 0.9rem;
 }
 
