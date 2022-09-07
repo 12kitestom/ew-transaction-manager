@@ -27,7 +27,7 @@ export default {
   methods: {
     goBackUrl() {
       let url = window.ew.dashboard.getUrlForFeature('userAdmin', this.userGuid)
-      console.log(url)
+      //console.log(url)
       if(url) {
         return url
       } else {
@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     shadow: function() {
-      return this.scrollPosition > 5 ? 'panel-shadow' : 'no-panel-shadow'
+      return this.scrollPosition > 100 ? 'panel-shadow' : 'no-panel-shadow'
     },
     goBackUrl2() {
       return window.ew.dashboard.getUrlForFeature('userAdmin', this.userGuid)

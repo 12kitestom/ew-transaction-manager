@@ -21,7 +21,7 @@
             </div>
 
             <div class="row">
-              <div class="col-sm-12 col-md-4 mb-3">
+              <div class="col-sm-12 col-md-6 mb-3">
                 <label for="points" class="form-label">Points</label>
                 <input
                   v-model="points"
@@ -32,7 +32,7 @@
                 />
               </div>
 
-              <div class="col-sm-12 col-md-4 mb-3">
+              <div class="col-sm-12 col-md-6 mb-3">
                 <label for="date" class="form-label">Transaction date</label>
                 <input
                   v-model="txDate"
@@ -67,8 +67,8 @@
                 ></textarea>
               </div>
             </div>
-            <div class="row">
-              <div class="col-sm-12 col-md-2">
+            <div class="row submit-btn-container">
+              <div class="col-sm-12 col-lg-auto">
                 <button @click="handleSubmit" class="btn btn-block btn-primary">Submit</button>
               </div>
             </div>
@@ -219,7 +219,11 @@ export default {
 </script>
 
 <style>
-.btn-block {
-  width: 100%;
-}
+  .submit-btn-container {
+    justify-content: end;
+  }
+
+  .btn-block {
+    width: 100%;
+  }
 </style>
