@@ -157,8 +157,10 @@ async function handlePending() {
             //refresh user balance
             window[thisApp].$children[0].loadUserBalance(guid);
           } else {
+			console.log('runs')
+			console.log('guid: ', guid)
             //in preparation for vue3 where $children property is removed
-            window[thisApp].methods.loadUserBalance(guid)
+            window[thisApp].methods?.loadUserBalance(guid) ||  window[thisApp].loadUserBalance(guid)
           }
 
           $('#table').DataTable().ajax.reload()
