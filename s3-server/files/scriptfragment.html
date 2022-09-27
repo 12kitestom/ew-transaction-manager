@@ -3,7 +3,8 @@ const urlSearchParams = new URLSearchParams(window.location.search);
 const params = Object.fromEntries(urlSearchParams.entries());
 const { u } = params;
 
-window.appName = 'txmanager'
-const App = window.txmanager
+window.vueApps = window.vueApps || {}
 
-Vue.createApp(App, { userGuid: u } ).mount('#tx-manager')
+window.appName = 'txmanager'
+
+window.vueApps[appName] = Vue.createApp(window.txmanager, { userGuid: u } ).mount('#tx-manager')
