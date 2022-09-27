@@ -5,7 +5,7 @@
       <div v-if="userGuid" id="app">
         <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
         <div v-if="!isLoading">
-          <UserSummary :balanceData="balanceData" />
+          <UserSummary :balanceData="balanceData" :key="balanceData.balanceDate" />
           <AddTransaction @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
           <TransactionTable :userGuid="userGuid" :key="counter"/>
         </div>
