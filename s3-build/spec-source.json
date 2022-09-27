@@ -5,15 +5,15 @@
     "js": [
       {
         "id": "jsfile",
-        "default": "/files/txmanager.umd.js",
-        "production": "/files/txmanager.umd.min.js"
+        "default": "/lib/txmanager.umd.js",
+        "production": "/lib/txmanager.umd.min.js"
       }
     ],
     "css": [
       {
         "id": "cssfile",
-        "default": "/files/txmanager.css",
-        "production": "/files/txmanager.css"
+        "default": "/lib/txmanager.css",
+        "production": "/lib/txmanager.css"
       }
     ]
   },

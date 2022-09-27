@@ -23,3 +23,7 @@ pnpm-debug.log*
 *.sln
 *.sw?
 /s3-server/files/files
+
+deploy/*
+!deploy/.gitkeep
+s3-build/package
