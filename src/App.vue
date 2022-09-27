@@ -6,7 +6,12 @@
         <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
         <div v-if="!isLoading">
           <UserSummary :balanceData="balanceData" :key="balanceData.balanceDate" />
-          <AddTransaction @add-transaction="postTransaction" @clear-errors="clearErrors" :message="errorMessage" :update="counter"/>
+          <AddTransaction 
+			@add-transaction="postTransaction"
+			@clear-errors="clearErrors"
+			:message="errorMessage" :update="counter"
+			:transactionTypes="transactionManagerConfig.transactionTypes"
+			/>
           <TransactionTable :userGuid="userGuid" :key="counter"/>
         </div>
         <div v-else>
@@ -52,14 +57,15 @@ export default {
   components:  { UserSummary, TransactionTable, AddTransaction, NavPanel },
   props: ['userGuid'],
   data() {
-    return {
-      isLoading: true,
-      balanceData: {},
-      statementData: {},
-      counter: 0,
-      errorMessage: '',
-      successMessage: ''
-    }
+	return {
+		isLoading: true,
+		balanceData: {},
+		statementData: {},
+		counter: 0,
+		errorMessage: '',
+		successMessage: '',
+		transactionManagerConfig: window.ew.pageGlobals.transactionManagerConfig
+	}
   },
   async created() {
     if (window.ewGetApiBase) {

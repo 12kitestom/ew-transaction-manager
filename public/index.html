@@ -39,6 +39,20 @@
       }
 
 	  window.appName = window.appName || 'transactionManager'
+
+	  window.ew.pageGlobals = window.ew.pageGlobals || {}
+      window.ew.pageGlobals.transactionManagerConfig = {
+        transactionTypes: [
+          {
+            label: "Reward",
+            value: "reward"
+          },
+          {
+            label: "Manual Admin Transaction",
+            value: "manual-admin"
+          }
+        ]
+      }
       </script> 
 
 

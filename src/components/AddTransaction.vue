@@ -11,16 +11,25 @@
               </button>
             </h5>
 
-            <div v-if="pointsValidationMsg || txNameValidationMsg || message" class="alert alert-danger" role="alert">
+            <div v-if="!areInputsValid" class="alert alert-danger" role="alert">
               <ul>
                 <li v-if="pointsValidationMsg">{{pointsValidationMsg}}</li>
                 <li v-if="txNameValidationMsg">{{txNameValidationMsg}}</li>
                 <li v-if="txDateValidationMsg">{{txDateValidationMsg}}</li>
+                <li v-if="txTypeValidationMsg">{{txTypeValidationMsg}}</li>
                 <li v-if="message">{{message}}</li>
               </ul>
             </div>
 
             <div class="row">
+              <div class="col-sm-12 mb-3">
+                <label for="tx-type" class="form-label">Transaction type</label>
+				<select v-model="txType" id="tx-type" class="form-select" aria-label="select transaction type">
+					<option value="" selected>Select transaction type</option>
+					<option v-for="txType in transactionTypes" :value="txType.value" :key="txType.value">{{txType.label}}</option>
+				</select>
+              </div>
+
               <div class="col-sm-12 col-md-6 mb-3">
                 <label for="points" class="form-label">Points</label>
                 <input
@@ -98,20 +107,27 @@ export default {
     },
     update: {
       type: Number
-    }
+    },
+	transactionTypes: {
+		type: Array,
+		required: true
+	}
   },
   data() {
     return {
-      showInputs: false,
-      points: '',
-      pointsValidationMsg: '',
-      txName: '',
-      txNameValidationMsg: '',
-      txDesc: '',
-      //txDate: new Date().toISOString().split('T')[0],
-      txDate: dayjs().format('YYYY-MM-DD'),
-      txDateValidationMsg: '',
-      testPoints: -105,
+		showInputs: false,
+		points: '',
+		pointsValidationMsg: '',
+		txName: '',
+		txNameValidationMsg: '',
+		txDesc: '',
+		txType: '',
+		txTypeValidationMsg: '',
+		areInputsValid: true,
+		//txDate: new Date().toISOString().split('T')[0],
+		txDate: dayjs().format('YYYY-MM-DD'),
+		txDateValidationMsg: '',
+		testPoints: -105,
     };
   },
   methods: {
@@ -121,36 +137,44 @@ export default {
 
     },
     validateInputs: function() {
-      let points = this.points
-      let txName = this.txName
-      let txDate = this.txDate.split('-').join('')
-      let today = dayjs().format('YYYY-MM-DD')
-      today = today.split('-').join('')
+		let points = this.points
+		let txName = this.txName
+		let txType = this.txType
+		let txDate = this.txDate.split('-').join('')
+		let today = dayjs().format('YYYY-MM-DD')
+		today = today.split('-').join('')
 
-      let isValid = true
+		let isValid = true
 
-      if(points.length < 1 || points == 0) {
-        this.pointsValidationMsg = 'Please enter amount of points to be adjusted'
-        isValid = false
-      } else {
-        this.pointsValidationMsg = ''
-      }
+		if(points.length < 1 || points == 0) {
+		this.pointsValidationMsg = 'Please enter amount of points to be adjusted'
+		isValid = false
+		} else {
+		this.pointsValidationMsg = ''
+		}
 
-      if(txName.length < 1) {
-        this.txNameValidationMsg = 'Please enter transaction name'
-        isValid = false
-      } else {
-        this.txNameValidationMsg = ''
-      } 
+		if(txName.length < 1) {
+		this.txNameValidationMsg = 'Please enter transaction name'
+		isValid = false
+		} else {
+		this.txNameValidationMsg = ''
+		} 
 
-      if(txDate > today ) {
-        this.txDateValidationMsg = 'Transaction date cannot be set in the future'
-        isValid = false
-      } else {
-        this.txDateValidationMsg = ''
-      } 
+		if(!txType.length) {
+		this.txTypeValidationMsg = 'Please select a transaction type'
+		isValid = false
+		} else {
+		this.txTypeValidationMsg = ''
+		}
 
-      return isValid
+		if(txDate > today ) {
+		this.txDateValidationMsg = 'Transaction date cannot be set in the future'
+		isValid = false
+		} else {
+		this.txDateValidationMsg = ''
+		} 
+		this.areInputsValid = isValid
+		return isValid
     },
     formatPoints: function(points) {
       points = Math.floor(parseInt(points))
@@ -180,18 +204,20 @@ export default {
     },
     handleSubmit: function () {
 
-      let userText = this.txName
-      let adminDescription = this.txDesc
-      let amount = this.points
-      let eventDate = this.txDate
+		let userText = this.txName
+		let adminDescription = this.txDesc
+		let amount = this.points
+		let eventDate = this.txDate
+		let txType = this.txType
       //let formatedPoints = this.formatPoints(this.points)
-      let isValid = this.validateInputs()
+		//let isValid = this.validateInputs()
+		this.validateInputs()
 
       //send
-      let payload = { amount, userText, adminDescription, eventDate }
+      let payload = { amount, userText, adminDescription, eventDate, txType }
 
 
-      if(isValid && window.confirm(
+      if(this.areInputsValid && window.confirm(
         `
         Are you sure you want to add this transaction?
         Amount: ${amount}
