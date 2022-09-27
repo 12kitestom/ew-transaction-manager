@@ -6,6 +6,7 @@
           <thead>
             <tr>
               <th>Transaction Ref.</th>
+              <th>Type</th>
               <th>Description</th>
               <th>Date</th>
               <th>Amount</th>
@@ -39,9 +40,10 @@ if (window.ewGetApiBase) {
 export default {
   name: "TransactionTable",
   props: {
-    userGuid: {
-      type: String
-    }
+	userGuid: {
+		type: String,
+		required: true
+	}
   },
   data() {
     return {};
@@ -75,6 +77,7 @@ export default {
         getData.data.recordsFiltered = getData.data.totalRecords
         
         callback(getData.data)
+		console.log(getData)
       },
       createdRow: function(row, data) {
         if(data.txStatus === 0) {
@@ -83,6 +86,7 @@ export default {
       },
       columns: [
         { data: "txRef", orderable: false },
+        { data: "txType", orderable: false },
         { data: "userText", orderable: false },
         { data: null,
           render: data => {
@@ -160,7 +164,12 @@ async function handlePending() {
 			console.log('runs')
 			console.log('guid: ', guid)
             //in preparation for vue3 where $children property is removed
-            window[thisApp].methods?.loadUserBalance(guid) ||  window[thisApp].loadUserBalance(guid)
+			if (window.vueApps && window.vueApps[thisApp]) {
+				//when deployed
+				window.vueApps[thisApp].loadUserBalance()
+			} else {
+				window[thisApp].loadUserBalance(guid)
+			}
           }
 
           $('#table').DataTable().ajax.reload()
