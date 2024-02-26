@@ -22,6 +22,7 @@
 
 <script>
 /* global $:readonly */ //eslint-disable-line
+const getSettingForFeature = window.getSettingForFeature
 
 let urlBase = process.env.VUE_APP_TRANSACTION_MANAGER_API_BASE; //eslint-disable-line
 
@@ -46,7 +47,9 @@ export default {
 	}
   },
   data() {
-    return {};
+    return {
+      preventApproveForTypes: ['redemption'],
+    };
   },
   created() {
     if (window.ewGetApiBase) {
@@ -54,6 +57,8 @@ export default {
     }
   },
   mounted() {
+    let preventApproveForTypes = getSettingForFeature('preventApproveForTypes', ['redemption']);
+    this.preventApproveForTypes = preventApproveForTypes;
     $("#table").DataTable({
       searchDelay: 1000,
       serverSide: true,
@@ -103,7 +108,11 @@ export default {
         { data: "balance", orderable: false },
         { data: null,
           render: data => {
-            if(data.txStatus === 0) {
+            let hide = false;
+            if (this.preventApproveForTypes.includes(data.txType)) {
+              hide = true;
+            }
+            if(data.txStatus === 0 && !hide) {
               return `
               <button class="btn btn-success btn-sm" data-type="approve" data-ref="${data.txRef}" data-guid="${this.userGuid}" >Approve</button>
               <button class="btn btn-danger btn-sm" data-type="reject" data-ref="${data.txRef}" data-guid="${this.userGuid}">Reject</button>

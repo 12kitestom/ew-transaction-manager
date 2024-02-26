@@ -5,7 +5,7 @@
       <div v-if="userGuid" id="app">
         <div @click="dismissMessage" v-if="successMessage" class="message-container alert alert-success">{{successMessage}}</div>
         <div v-if="!isLoading">
-          <UserSummary :balanceData="balanceData" :key="balanceData.balanceDate" />
+          <UserSummary :balanceData="balanceData" :key="balanceData.balanceDate" :config="transactionManagerConfig" @refresh="refreshUserBalance" />
           <AddTransaction 
 			@add-transaction="postTransaction"
 			@clear-errors="clearErrors"
@@ -96,6 +96,15 @@ export default {
         this.statementData = res.data
       } else {
         alert("Error fetching statement data");
+      }
+    },
+    refreshUserBalance: async function() {
+      let userGuid = this.userGuid;
+      const res = await window.ew.ajax.postRequest(`${urlBase}/admin/account/${userGuid}/updateBalance`);
+      if (res.success) {
+        this.loadUserBalance()
+      } else {
+        alert("Error fetching balance data. Please try again.");
       }
     },
     postTransaction: async function(payload) {
