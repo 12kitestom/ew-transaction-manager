@@ -7,6 +7,7 @@ echo starting!
 BUILDDIR=s3-build
 LIBNAME=txmanager
 DESTDIR=deploy
+BUILDDATE=`date +"%Y-%m-%d %T"`
 
 npm i
 npm run build-lib-prod
@@ -29,6 +30,7 @@ if [ $RESULT -eq 0 ]; then
     rm ./package/feature-spec.json
     cp ./spec-source.json ./package/feature-spec.json
     sed -i '' -e "s/%%VER%%/$VERSION/g" ./package/feature-spec.json
+    sed -i '' -e "s/%%BUILDTIME%%/$BUILDDATE/g" ./package/feature-spec.json    
 
     rm -rf ../$DESTDIR/dev-latest
     rm -rf ../$DESTDIR/$VERSION

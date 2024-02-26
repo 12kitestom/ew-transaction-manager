@@ -1,6 +1,7 @@
 {
   "featureName": "9217d15d-f385-4c43-b645-6ce4959a3c43",
   "version": "%%VER%%",
+  "buildTime": "%%BUILDTIME%%",  
   "resources": {
     "js": [
       {
